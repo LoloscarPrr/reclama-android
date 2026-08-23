@@ -7,7 +7,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import cl.reclama.app.data.LocalCaseStore
 import cl.reclama.app.domain.CaseCategory
 import cl.reclama.app.domain.CaseStatus
 import cl.reclama.app.domain.ConsumerCase
@@ -21,7 +23,11 @@ private sealed interface Screen {
 
 @Composable
 fun ReclamaApp() {
-    val cases = remember { mutableStateListOf<ConsumerCase>() }
+    val context = LocalContext.current.applicationContext
+    val store = remember(context) { LocalCaseStore(context) }
+    val cases = remember {
+        mutableStateListOf<ConsumerCase>().apply { addAll(store.loadCases()) }
+    }
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
 
     MaterialTheme {
@@ -38,6 +44,7 @@ fun ReclamaApp() {
                     onBack = { screen = Screen.Home },
                     onSave = { newCase ->
                         cases.add(0, newCase)
+                        store.saveCases(cases)
                         screen = Screen.Detail(newCase.id)
                     }
                 )
