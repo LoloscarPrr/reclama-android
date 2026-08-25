@@ -23,7 +23,8 @@ class LocalCaseStore(context: Context) {
                             title = item.getString("title"),
                             company = item.optString("company").takeIf { it.isNotBlank() },
                             category = CaseCategory.valueOf(item.getString("category")),
-                            status = CaseStatus.valueOf(item.optString("status", CaseStatus.DRAFT.name))
+                            status = CaseStatus.valueOf(item.optString("status", CaseStatus.DRAFT.name)),
+                            narrative = item.optString("narrative").takeIf { it.isNotBlank() }
                         )
                     )
                 }
@@ -41,6 +42,7 @@ class LocalCaseStore(context: Context) {
                     put("company", consumerCase.company.orEmpty())
                     put("category", consumerCase.category.name)
                     put("status", consumerCase.status.name)
+                    put("narrative", consumerCase.narrative.orEmpty())
                 }
             )
         }

@@ -5,7 +5,8 @@ data class ConsumerCase(
     val title: String,
     val company: String?,
     val category: CaseCategory,
-    val status: CaseStatus = CaseStatus.DRAFT
+    val status: CaseStatus = CaseStatus.DRAFT,
+    val narrative: String? = null
 )
 
 enum class CaseCategory {
